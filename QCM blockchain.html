@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QCM - Blockchain et ses risques</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #5e35b1;
+            --secondary-color: #3949ab;
+            --accent-color: #7c4dff;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --success-color: #4caf50;
+            --danger-color: #f44336;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: var(--dark-color);
+            background-color: #f5f7fa;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .question-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .question-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+            border-left: 5px solid var(--primary-color);
+        }
+
+        .question-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .question-number {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            margin-right: 10px;
+            font-weight: 600;
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-bottom: 20px;
+            display: inline;
+        }
+
+        .options {
+            margin: 15px 0;
+        }
+
+        .option {
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            background-color: var(--light-color);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            border: 1px solid #ddd;
+        }
+
+        .option:hover {
+            background-color: #e9ecef;
+            border-color: var(--primary-color);
+        }
+
+        .option.correct {
+            background-color: rgba(76, 175, 80, 0.2);
+            border-color: var(--success-color);
+        }
+
+        .option.incorrect {
+            background-color: rgba(244, 67, 54, 0.1);
+            border-color: var(--danger-color);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: var(--transition);
+            margin-top: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .answer {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: rgba(67, 97, 238, 0.1);
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--primary-color);
+            display: none;
+        }
+
+        .answer.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .progress-container {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: var(--border-radius);
+            margin: 30px 0;
+            height: 10px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            border-radius: var(--border-radius);
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .progress-text {
+            text-align: center;
+            margin-top: 5px;
+            font-size: 0.9rem;
+            color: var(--dark-color);
+        }
+
+        .score-container {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            display: none;
+        }
+
+        .score-container.show {
+            display: block;
+        }
+
+        .score {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin: 10px 0;
+        }
+
+        .restart-btn {
+            background-color: var(--accent-color);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .question-container {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .question-text {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>QCM - Blockchain et ses risques</h1>
+            <p class="subtitle">Testez vos connaissances sur la technologie blockchain et les risques associés</p>
+        </header>
+
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+            <div class="progress-text" id="progressText">0/45 questions complétées</div>
+        </div>
+
+        <div class="question-container" id="questionContainer">
+            <!-- Questions will be inserted here by JavaScript -->
+        </div>
+
+        <div class="score-container" id="scoreContainer">
+            <h2>Résultats du QCM</h2>
+            <div class="score" id="scoreDisplay">0/45</div>
+            <p id="scoreMessage"></p>
+            <button class="btn restart-btn" id="restartBtn">Recommencer le QCM</button>
+        </div>
+    </div>
+
+    <script>
+        // Questions data
+        const questions = [
+            {
+                question: "Qu'est-ce qu'une blockchain ?",
+                options: [
+                    "A. Une base de données centralisée gérée par une autorité unique",
+                    "B. Une technologie de stockage et transmission d'informations transparente, sécurisée et décentralisée",
+                    "C. Un type de cryptomonnaie comme le Bitcoin",
+                    "D. Un système de paiement électronique traditionnel"
+                ],
+                answer: "B. Une technologie de stockage et transmission d'informations transparente, sécurisée et décentralisée"
+            },
+            {
+                question: " Quelle est la principale caractéristique d'une blockchain publique ?",
+                options: [
+                    "A. Elle est contrôlée par une seule entreprise",
+                    "B. Elle est ouverte à tous et totalement décentralisée",
+                    "C. Elle nécessite une autorisation pour y participer",
+                    "D. Elle est plus rapide que les blockchains privées"
+                ],
+                answer: "B. Elle est ouverte à tous et totalement décentralisée"
+            },
+            {
+                question: " Qui a créé le Bitcoin ?",
+                options: [
+                    "A. Vitalik Buterin",
+                    "B. Satoshi Nakamoto",
+                    "C. Elon Musk",
+                    "D. La Banque Centrale Européenne"
+                ],
+                answer: "B. Satoshi Nakamoto"
+            },
+            {
+                question: " Quelle est la première étape d'une transaction Bitcoin ?",
+                options: [
+                    "A. Signature de la transaction avec la clé privée",
+                    "B. Création d'une paire de clés (publique et privée)",
+                    "C. Diffusion de la transaction sur le réseau",
+                    "D. Confirmation par les mineurs"
+                ],
+                answer: " Création d'une paire de clés (publique et privée)"
+            },
+            {
+                question: " Quel est le rôle des mineurs dans le réseau Bitcoin ?",
+                options: [
+                    "A. Ils créent de nouveaux Bitcoins à partir de rien",
+                    "B. Ils valident les transactions et les ajoutent à la blockchain",
+                    "C. Ils contrôlent le prix du Bitcoin",
+                    "D. Ils fournissent des portefeuilles électroniques"
+                ],
+                answer: "B. Ils valident les transactions et les ajoutent à la blockchain"
+            },
+            {
+                question: " Quelle est la différence entre un CEX et un DEX ?",
+                options: [
+                    "A. Un CEX est centralisé alors qu'un DEX est décentralisé",
+                    "B. Un CEX est plus sécurisé qu'un DEX",
+                    "C. Un DEX nécessite une vérification d'identité alors qu'un CEX non",
+                    "D. Il n'y a pas de différence"
+                ],
+                answer: "A. Un CEX est centralisé alors qu'un DEX est décentralisé"
+            },
+            {
+                question: "  Qu'est-ce qu'un smart contract ?",
+                options: [
+                    "A. Un contrat papier numérisé",
+                    "B. Un programme autonome qui s'exécute lorsque des conditions prédéfinies sont remplies",
+                    "C. Un accord verbal entre deux parties",
+                    "D. Un contrat rédigé par une intelligence artificielle"
+                ],
+                answer: "B. Un programme autonome qui s'exécute lorsque des conditions prédéfinies sont remplies"
+            },
+            {
+                question: " Qu'est-ce que le staking dans le contexte des cryptomonnaies ?",
+                options: [
+                    "A. Le blocage de cryptos pour participer à la validation du réseau et gagner des récompenses",
+                    "B. L'achat de cryptos en grande quantité",
+                    "C. La vente à découvert de cryptos",
+                    "D. Le stockage de cryptos sur un exchange"
+                ],
+                answer: "A. Le blocage de cryptos pour participer à la validation du réseau et gagner des récompenses"
+            },
+            {
+                question: " Quel est le principal risque des ICO (Initial Coin Offerings) ?",
+                options: [
+                    "A. Le manque de régulation et le risque d'arnaque",
+                    "B. Le fait qu'elles soient trop sécurisées",
+                    "C. Leur lien avec les banques traditionnelles",
+                    "D. Leur vitesse de transaction trop lente"
+                ],
+                answer: "A. Le manque de régulation et le risque d'arnaque"
+            },
+            {
+                question: " Qu'est-ce qu'un NFT ?",
+                options: [
+                    "A. Un jeton numérique interchangeable",
+                    "B. Un jeton numérique unique représentant un actif spécifique",
+                    "C. Une cryptomonnaie comme le Bitcoin",
+                    "D. Un type de smart contract"
+                ],
+                answer: "B. Un jeton numérique unique représentant un actif spécifique"
+            },
+            {
+                question: " Qu'est-ce que la DeFi ?",
+                options: [
+                    "A. Des services financiers traditionnels numérisés",
+                    "B. Des services financiers décentralisés sans intermédiaires",
+                    "C. Une cryptomonnaie spécifique",
+                    "D. Un type de blockchain privée"
+                ],
+                answer: "B. Des services financiers décentralisés sans intermédiaires"
+            },
+            {
+                question: " En France, quel statut juridique a le Bitcoin ?",
+                options: [
+                    "A. Une monnaie légale",
+                    "B. Un actif numérique",
+                    "C. Un titre financier",
+                    "D. Une marchandise"
+                ],
+                answer: "B. Un actif numérique"
+            },
+            {
+                question: " Qu'est-ce qu'un PSAN en France ?",
+                options: [
+                    "A. Un Professionnel du Secteur des Actifs Numériques",
+                    "B. Un Prestataire de Services sur Actifs Numériques",
+                    "C. Un Protocole de Sécurité des Actifs Numériques",
+                    "D. Un Programme de Surveillance des Actifs Numériques"
+                ],
+                answer: "B. Un Prestataire de Services sur Actifs Numériques"
+            },
+            {
+                question: " Quel est l'objectif principal du règlement MiCA dans l'UE ?",
+                options: [
+                    "A. Interdire les cryptomonnaies",
+                    "B. Harmoniser la régulation des crypto-actifs dans l'UE",
+                    "C. Créer une cryptomonnaie européenne",
+                    "D. Taxer davantage les transactions en crypto"
+                ],
+                answer: "B. Harmoniser la régulation des crypto-actifs dans l'UE"
+            },
+            {
+                question: " Quel type d'arnaque consiste à séduire une victime pour lui soutirer des cryptos ?",
+                options: [
+                    "A. L'arnaque au président",
+                    "B. L'arnaque à l'amour (romance scam)",
+                    "C. L'arnaque à la loterie",
+                    "D. L'arnaque au support technique"
+                ],
+                answer: "B. L'arnaque à l'amour (romance scam)"
+            },
+            {
+                question: " Quel a été le plus grand piratage de cryptomonnaie en 2022 ?",
+                options: [
+                    "A. Le piratage de Binance",
+                    "B. Le piratage de Ronin Network",
+                    "C. Le piratage de Coinbase",
+                    "D. Le piratage de Kraken"
+                ],
+                answer: "B. Le piratage de Ronin Network"
+            },
+            {
+                question: " Quel est le principal problème du Bitcoin concernant son utilisation comme monnaie ?",
+                options: [
+                    "A. Son cours légal inexistant",
+                    "B. Sa volatilité",
+                    "C. Sa lenteur",
+                    "D. Toutes ces réponses"
+                ],
+                answer: "D. Toutes ces réponses"
+            },
+            {
+                question: " Qu'est-ce que la Travel Rule dans le contexte des cryptos ?",
+                options: [
+                    "A. Une règle sur les voyages avec des cryptos",
+                    "B. Une obligation de déclaration des transactions au-delà d'un certain montant",
+                    "C. Une méthode de minage",
+                    "D. Un type de smart contract"
+                ],
+                answer: "B. Une obligation de déclaration des transactions au-delà d'un certain montant"
+            },
+            {
+                question: " Quel est le principal avantage de la blockchain ?",
+                options: [
+                    "A. Sa centralisation",
+                    "B. Son immuabilité et sa transparence",
+                    "C. Sa vitesse de transaction",
+                    "D. Son contrôle par les banques"
+                ],
+                answer: "B. Son immuabilité et sa transparence"
+            },
+            {
+                question: " Quel est le principal risque des plateformes DEX ?",
+                options: [
+                    "A. Leur conformité réglementaire excessive",
+                    "B. L'absence de recours en cas d'erreur ou de fraude",
+                    "C. Leur lenteur",
+                    "D. Leur centralisation"
+                ],
+                answer: "B. L'absence de recours en cas d'erreur ou de fraude"
+            },
+            {
+                question: " Qu'est-ce que le KYC dans le contexte des cryptos ?",
+                options: [
+                    "A. Un type de cryptomonnaie",
+                    "B. Une méthode de minage",
+                    "C. Une obligation de vérification d'identité des clients",
+                    "D. Un protocole blockchain"
+                ],
+                answer: "C. Une obligation de vérification d'identité des clients"
+            },
+            {
+                question: " Quelle est la principale limite réglementaire de la blockchain ?",
+                options: [
+                    "A. La rapidité de l'innovation financière",
+                    "B. Sa trop grande simplicité",
+                    "C. Son adoption massive par les banques",
+                    "D. Son incompatibilité avec Internet"
+                ],
+                answer: "A. La rapidité de l'innovation financière"
+            },
+            {
+                question: " Quel organisme français régule les PSAN ?",
+                options: [
+                    "A. La Banque de France",
+                    "B. L'AMF (Autorité des Marchés Financiers)",
+                    "C. L'ACP (Autorité de Contrôle Prudentiel)",
+                    "D. La DGCCRF"
+                ],
+                answer: "B. L'AMF (Autorité des Marchés Financiers)"
+            },
+            {
+                question: " Quelle est la principale caractéristique d'un NFT ?",
+                options: [
+                    "A. Sa fongibilité",
+                    "B. Son unicité et non-fongibilité",
+                    "C. Son lien avec le Bitcoin",
+                    "D. Sa centralisation"
+                ],
+                answer: "B. Son unicité et non-fongibilité"
+            },
+            {
+                question: " Quel est le principal risque des wallets (portefeuilles) crypto ?",
+                options: [
+                    "A. La perte des clés privées",
+                    "B. Leur compatibilité avec toutes les cryptos",
+                    "C. Leur facilité d'utilisation",
+                    "D. Leur régulation excessive"
+                ],
+                answer: "A. La perte des clés privées"
+            },
+            {
+                question: " Qu'est-ce que le proof-of-stake (PoS) ?",
+                options: [
+                    "A. Un mécanisme de consensus alternatif au proof-of-work",
+                    "B. Une méthode de piratage",
+                    "C. Un type de cryptomonnaie",
+                    "D. Une régulation européenne"
+                ],
+                answer: "A. Un mécanisme de consensus alternatif au proof-of-work"
+            },
+            {
+                question: " Quelle est la principale différence entre Bitcoin et Ethereum ?",
+                options: [
+                    "A. Ethereum permet les smart contracts alors que Bitcoin non",
+                    "B. Bitcoin est plus récent qu'Ethereum",
+                    "C. Ethereum a une capitalisation plus importante",
+                    "D. Bitcoin utilise le proof-of-stake"
+                ],
+                answer: "A. Ethereum permet les smart contracts alors que Bitcoin non"
+            },
+            {
+                question: " Quel est le principal risque lié au staking ?",
+                options: [
+                    "A. Le slashing (pénalisation pour mauvaise validation)",
+                    "B. La volatilité nulle",
+                    "C. L'impossibilité de récupérer ses fonds",
+                    "D. L'obligation de staker indéfiniment"
+                ],
+                answer: "A. Le slashing (pénalisation pour mauvaise validation)"
+            },
+            {
+                question: " Quelle est la principale mesure de protection contre les arnaques aux cryptos ?",
+                options: [
+                    "A. Ne jamais faire de recherches sur les projets",
+                    "B. Utiliser uniquement des plateformes non régulées",
+                    "C. Vérifier systématiquement les informations et utiliser des plateformes régulées",
+                    "D. Partager ses clés privées"
+                ],
+                answer: "C. Vérifier systématiquement les informations et utiliser des plateformes régulées"
+            },
+            {
+                question: " Qu'est-ce qu'un stablecoin ?",
+                options: [
+                    "A. Une cryptomonnaie indexée sur un actif stable comme le dollar",
+                    "B. Un Bitcoin plus stable",
+                    "C. Un type de mineur",
+                    "D. Une blockchain privée"
+                ],
+                answer: "A. Une cryptomonnaie indexée sur un actif stable comme le dollar"
+            },
+            {
+                question: " Qu'est-ce qu'un fork dans le contexte des blockchains ?",
+                options: [
+                    "A. Une fourchette utilisée par les mineurs",
+                    "B. Une modification du protocole blockchain créant une nouvelle version de la chaîne",
+                    "C. Un type de portefeuille crypto",
+                    "D. Une technique de piratage"
+                ],
+                answer: "B. Une modification du protocole blockchain créant une nouvelle version de la chaîne"
+            },
+            {
+                question: " Quel est l'avantage principal des blockchains privées ?",
+                options: [
+                    "A. Une plus grande décentralisation",
+                    "B. Un meilleur contrôle et confidentialité pour les entreprises",
+                    "C. Une plus grande récompense pour les mineurs",
+                    "D. Une compatibilité avec tous les crypto-actifs"
+                ],
+                answer: "B. Un meilleur contrôle et confidentialité pour les entreprises"
+            },
+            {
+                question: "33. Qu'est-ce que la preuve de travail (Proof-of-Work) ?",
+                options: [
+                    "A. Un document juridique pour les mineurs",
+                    "B. Un mécanisme de consensus nécessitant des calculs intensifs",
+                    "C. Une méthode de staking",
+                    "D. Un type de smart contract"
+                ],
+                answer: "B. Un mécanisme de consensus nécessitant des calculs intensifs"
+            },
+            {
+                question: "34. Quelle est la particularité des transactions Bitcoin ?",
+                options: [
+                    "A. Elles sont réversibles",
+                    "B. Elles nécessitent l'intervention d'une banque",
+                    "C. Elles sont irréversibles une fois confirmées",
+                    "D. Elles sont gratuites"
+                ],
+                answer: "C. Elles sont irréversibles une fois confirmées"
+            },
+            {
+                question: " Quel est le rôle des frais de transaction dans le réseau Bitcoin ?",
+                options: [
+                    "A. Rémunérer les développeurs du protocole",
+                    "B. Inciter les mineurs à inclure la transaction dans un bloc",
+                    "C. Servir de taxe pour les gouvernements",
+                    "D. Financer les exchanges"
+                ],
+                answer: "B. Inciter les mineurs à inclure la transaction dans un bloc"
+            },
+            {
+                question: "36. Qu'est-ce que la Travel Rule impose aux plateformes crypto ?",
+                options: [
+                    "A. De limiter les voyages des utilisateurs",
+                    "B. De partager des informations sur les expéditeurs et bénéficiaires pour les transactions importantes",
+                    "C. D'interdire les transactions internationales",
+                    "D. De vérifier les billets d'avion des utilisateurs"
+                ],
+                answer: "B. De partager des informations sur les expéditeurs et bénéficiaires pour les transactions importantes"
+            },
+            {
+                question: " Quel est le principal risque des stablecoins ?",
+                options: [
+                    "A. Leur volatilité extrême",
+                    "B. Le manque de transparence sur les réserves",
+                    "C. Leur incompatibilité avec les exchanges",
+                    "D. Leur centralisation excessive"
+                ],
+                answer: "B. Le manque de transparence sur les réserves"
+            },
+            {
+                question: "38. Qu'est-ce que le slashing dans les mécanismes de preuve d'enjeu (PoS) ?",
+                options: [
+                    "A. Une récompense pour les validateurs",
+                    "B. Une pénalité pour comportement malveillant ou inactif",
+                    "C. Un type de fork",
+                    "D. Une méthode de minage"
+                ],
+                answer: "B. Une pénalité pour comportement malveillant ou inactif"
+            },
+            {
+                question: " Quelle problématique soulève la blockchain vis-à-vis du RGPD ?",
+                options: [
+                    "A. Son incompatibilité avec le droit à l'oubli",
+                    "B. Sa trop grande rapidité",
+                    "C. Son utilisation excessive d'énergie",
+                    "D. Son manque de transparence"
+                ],
+                answer: "A. Son incompatibilité avec le droit à l'oubli"
+            },
+            {
+                question: " Quel est l'objectif principal de la convention AERAS ?",
+                options: [
+                    "A. Réguler les exchanges",
+                    "B. Faciliter l'accès à l'assurance et au crédit pour les personnes à risque aggravé de santé",
+                    "C. Combattre le blanchiment d'argent",
+                    "D. Promouvoir le Bitcoin comme monnaie légale"
+                ],
+                answer: "B. Faciliter l'accès à l'assurance et au crédit pour les personnes à risque aggravé de santé"
+            },
+            {
+                question: "41. Qu'est-ce que le droit à l'oubli dans le contexte crypto ?",
+                options: [
+                    "A. La possibilité d'effacer ses transactions",
+                    "B. Pour les anciens malades, ne pas déclarer une pathologie sous certaines conditions",
+                    "C. Un droit de rétractation pour les ICO",
+                    "D. La suppression des données personnelles des exchanges"
+                ],
+                answer: "B. Pour les anciens malades, ne pas déclarer une pathologie sous certaines conditions"
+            },
+            {
+                question: " Quelle est la principale mesure de sécurité pour protéger ses cryptos ?",
+                options: [
+                    "A. Partager ses clés privées avec un proche",
+                    "B. Stocker ses clés privées de manière sécurisée",
+                    "C. Utiliser uniquement des exchanges non régulés",
+                    "D. Ne jamais faire de transactions"
+                ],
+                answer: "B. Stocker ses clés privées de manière sécurisée"
+            },
+            {
+                question: "43. Quel est le principal risque des plateformes de lending crypto ?",
+                options: [
+                    "A. La garantie des fonds par l'État",
+                    "B. Le défaut de contrepartie ou la faillite de la plateforme",
+                    "C. La vitesse des transactions trop rapide",
+                    "D. L'absence totale de rendement"
+                ],
+                answer: "B. Le défaut de contrepartie ou la faillite de la plateforme"
+            },
+            {
+                question: " Qu'est-ce qu'un ETF Bitcoin Spot ?",
+                options: [
+                    "A. Un produit dérivé sans détention de Bitcoin",
+                    "B. Un ETF qui réplique le prix du Bitcoin en détenant l'actif sous-jacent",
+                    "C. Un type de stablecoin",
+                    "D. Un portefeuille matériel"
+                ],
+                answer: "B. Un ETF qui réplique le prix du Bitcoin en détenant l'actif sous-jacent"
+            },
+            {
+                question: " Quelle est la principale innovation apportée par Ethereum par rapport à Bitcoin ?",
+                options: [
+                    "A. Une capitalisation plus importante",
+                    "B. La possibilité d'exécuter des smart contracts",
+                    "C. Une plus grande rapidité de transaction",
+                    "D. Un minage plus facile"
+                ],
+                answer: "B. La possibilité d'exécuter des smart contracts"
+            }
+        ];
+
+        // DOM elements
+        const questionContainer = document.getElementById('questionContainer');
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+        const scoreContainer = document.getElementById('scoreContainer');
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        const scoreMessage = document.getElementById('scoreMessage');
+        const restartBtn = document.getElementById('restartBtn');
+
+        // State variables
+        let currentQuestion = 0;
+        let score = 0;
+        let userAnswers = Array(questions.length).fill(null);
+
+        // Initialize the quiz
+        function initQuiz() {
+            currentQuestion = 0;
+            score = 0;
+            userAnswers = Array(questions.length).fill(null);
+            renderQuestions();
+            updateProgress();
+            scoreContainer.classList.remove('show');
+        }
+
+        // Render all questions
+        function renderQuestions() {
+            questionContainer.innerHTML = '';
+            
+            questions.forEach((q, index) => {
+                const questionCard = document.createElement('div');
+                questionCard.className = 'question-card';
+                
+                const questionHTML = `
+                    <div>
+                        <span class="question-number">${index + 1}</span>
+                        <h3 class="question-text">${q.question}</h3>
+                    </div>
+                    <div class="options">
+                        ${q.options.map(opt => `
+                            <div class="option" data-index="${index}" data-option="${opt}">
+                                ${opt}
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="answer" id="answer-${index}">
+                        <strong>Réponse correcte :</strong> ${q.answer}
+                    </div>
+                `;
+                
+                questionCard.innerHTML = questionHTML;
+                questionContainer.appendChild(questionCard);
+            });
+
+            // Add event listeners to options
+            document.querySelectorAll('.option').forEach(option => {
+                option.addEventListener('click', function() {
+                    const questionIndex = parseInt(this.getAttribute('data-index'));
+                    const selectedOption = this.getAttribute('data-option');
+                    
+                    // Store user answer
+                    userAnswers[questionIndex] = selectedOption;
+                    
+                    // Check if answer is correct
+                    const isCorrect = selectedOption === questions[questionIndex].answer;
+                    
+                    // Update UI
+                    if (isCorrect) {
+                        this.classList.add('correct');
+                        // Remove incorrect class if it was there
+                        this.classList.remove('incorrect');
+                    } else {
+                        this.classList.add('incorrect');
+                        // Find and highlight correct answer
+                        const options = document.querySelectorAll(`.option[data-index="${questionIndex}"]`);
+                        options.forEach(opt => {
+                            if (opt.getAttribute('data-option') === questions[questionIndex].answer) {
+                                opt.classList.add('correct');
+                            }
+                        });
+                    }
+                    
+                    // Show answer explanation
+                    document.getElementById(`answer-${questionIndex}`).classList.add('show');
+                    
+                    // Update progress
+                    updateProgress();
+                });
+            });
+        }
+
+        // Update progress bar and text
+        function updateProgress() {
+            const answered = userAnswers.filter(a => a !== null).length;
+            const total = questions.length;
+            const percentage = (answered / total) * 100;
+            
+            progressBar.style.width = `${percentage}%`;
+            progressText.textContent = `${answered}/${total} questions complétées`;
+            
+            // If all questions answered, show score
+            if (answered === total) {
+                calculateScore();
+                scoreContainer.classList.add('show');
+            }
+        }
+
+        // Calculate final score
+        function calculateScore() {
+            score = 0;
+            userAnswers.forEach((answer, index) => {
+                if (answer === questions[index].answer) {
+                    score++;
+                }
+            });
+            
+            scoreDisplay.textContent = `${score}/${questions.length}`;
+            
+            // Set score message based on performance
+            const percentage = (score / questions.length) * 100;
+            if (percentage >= 80) {
+                scoreMessage.textContent = "Expert en blockchain ! Vous maîtrisez parfaitement le sujet et ses risques.";
+            } else if (percentage >= 60) {
+                scoreMessage.textContent = "Bon niveau ! Vous avez de solides connaissances sur la blockchain.";
+            } else if (percentage >= 40) {
+                scoreMessage.textContent = "Niveau intermédiaire. Continuez à apprendre pour approfondir vos connaissances.";
+            } else {
+                scoreMessage.textContent = "Débutant. Consultez les réponses pour mieux comprendre la blockchain et ses enjeux.";
+            }
+        }
+
+        // Restart quiz
+        restartBtn.addEventListener('click', initQuiz);
+
+        // Initialize the quiz when page loads
+        window.addEventListener('DOMContentLoaded', initQuiz);
+    </script>
+</body>
+</html>
